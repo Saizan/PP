@@ -1,0 +1,65 @@
+:let take = \n.\xs. 
+     case n of
+       zero. nil;
+       suc n. case xs of
+	      	nil. nil;
+		cons x xs. cons x (take n xs);;;
+
+:let add = \n.\m.
+   case n of
+     zero. m;
+     suc n. suc (add n m);;
+
+:let zipWith = \f.\xs.\ys.
+   case xs of
+     nil. nil;
+     cons x xs. 
+        case ys of
+           nil. nil;
+           cons y ys. cons (f x y) (zipWith f xs ys);;;
+
+:let tail = \xs.
+      case xs of
+      	cons x xs. xs;;
+
+:let fibs = cons 1 (cons 1 (zipWith add fibs (tail fibs)));
+
+:let undefined = undefined;
+
+:let map = \f.\xs. case xs of
+                    nil.       nil;
+                    cons x xs. cons (f x) (map f xs);;
+:let evens = cons 0 (map (add 1) odds);
+     odds  = map (add 1) evens;
+
+:let if = \x.\t.\f. case x of true. t; false. f;;
+:let and = \p.\q. if p q false;
+:let or = \p.\q. if p true q;
+:let nats = cons 0 (map (add 1) nats);
+:let numberElems = zipWith pair nats;
+:let isPrefixOf = \eq.\ps.\xs. 
+       case ps of
+     	nil. true;
+        cons p ps. case xs of
+                    nil. false;	  	  
+                    cons x xs. and (eq p x) (isPrefixOf eq ps xs);;; 
+:let foldr = \f.\z.\xs.
+     case xs of
+     	  nil. z;
+	  cons x xs. f x (foldr f z xs);; 
+:let any = \p. foldr (\x. or (p x)) false;
+:let tails = \xs. cons xs (
+     case xs of
+     	  nil. nil;
+	  cons x xs. tails xs;); 
+:let isInfixOf = \eq.\needle.\haystack. any (isPrefixOf eq needle) (tails haystack);
+:let eqNat = \n.\m.
+     case n of
+       zero. case m of
+               zero. true;
+               suc m. false;;
+       suc n. case m of
+                suc m. eqNat n m;
+                zero. false;;;
+          
+				
